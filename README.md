@@ -6,7 +6,7 @@ I am using Haskell as I am learning the language.
 
 # Running the code
 
-I am using with vanilla Haskell, so a basic installation is sufficient.
+I am using with vanilla Haskell (GHC 8.10.7), so a basic installation is sufficient.
 
 For each day, simply compile and execute the binary:
 ```
