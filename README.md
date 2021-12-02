@@ -16,3 +16,8 @@ Linking day_01.exe ...
 > .\day_01.exe
 (the answer)
 ```
+
+## Docker image
+
+GHCI
+> docker run -it --rm haskell:8.10

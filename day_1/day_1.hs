@@ -3,7 +3,7 @@ nofIncrements :: [Int] -> Int
 nofIncrements numbers = length $ filter (>0) $ zipWith (-) (tail numbers) numbers
 
 sumThreemeasurements :: [Int] -> [Int]
-sumThreemeasurements (x:y:z:xs) = [(x + y + z)] ++ sumThreemeasurements ([y, z] ++ xs)
+sumThreemeasurements (x:y:z:zs) = [(x + y + z)] ++ sumThreemeasurements (y:z:zs)
 sumThreemeasurements _ = []
 
 nofIncrements3 :: [Int] -> Int
