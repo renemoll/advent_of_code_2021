@@ -1,58 +1,74 @@
 import Data.List
 import Data.List.Split
 
-mark :: Int -> [Int] -> [Int]
--- Find `number` in `card` and replace it with -1
-mark number card =
+data BingoCell = Number { bingoInt :: Int }
+               | Marked
+                 deriving (Show, Eq)
+
+type BingoCard = [BingoCell]
+
+-- Parse the input format into a list on numbers and bingo cards.
+parse :: [String] -> ([Int], [BingoCard])
+parse input = (numbers, cards)
+  where numbers = [read x :: Int | x <- (splitOn "," $ input !! 0)]
+        cards = [[Number (read x :: Int) | x <- concat $ map words (lines y)] | y <- (tail input)]
+
+-- Mark a number on a card (if it is there) and return the marked card
+mark :: Int -> BingoCard -> BingoCard
+mark x card =
   case n of
-    Just i -> let (pre, (_:post)) = splitAt i card in pre ++ [-1] ++ post
+    Just i -> let (pre, (_:post)) = splitAt i card in pre ++ [Marked] ++ post
     Nothing -> card
-  where n = number `elemIndex` card
+  where n = (Number x) `elemIndex` card
 
-hasBingo :: [Int] -> Bool
-hasBingo card = any (\a -> a == 5) ys
-  where xs = (cardRows card) ++ (cardCols card)
-        ys = [length $ filter (==(-1)) x | x <- xs]
-
-cardRows :: [Int] -> [[Int]]
-cardRows card = init $ go card
-  where go :: [Int] -> [[Int]]
+-- Get the row-space of our BingoCard (matrix)
+card2rows :: BingoCard -> [[BingoCell]]
+card2rows card = init $ go card
+  where go :: [BingoCell] -> [[BingoCell]]
         go [] = [[]]
         go xs = [row] ++ rows
           where row = take 5 xs
                 rows = go $ drop 5 xs
 
-cardCols :: [Int] -> [[Int]]
-cardCols card = init $ go [0..4]
-  where go [] = [[]]
-        go (x:xs) = [col] ++ cols
-          where col = map fst $ filter (\a -> snd a == x) $ zip card $ cycle [0..4]
-                cols = go xs
+-- Get the col-space of our BingoCard (matrix)
+card2cols :: BingoCard -> [[BingoCell]]
+card2cols = transpose . card2rows
 
-part1 cards [] = -1
-part1 cards (x:xs) = if check then acc * x else part1 ys xs
+-- Check if a card has bingo
+hasBingo :: BingoCard -> Bool
+hasBingo card = any (\a -> a == 5) ys
+  where xs = (card2rows card) ++ (card2cols card)
+        ys = [length $ filter (==Marked) x | x <- xs]
+
+-- Sum all the remaining numbers on a card
+sumCard :: BingoCard -> Int
+sumCard cells = sum $ [cell2int x | x <- cells]
+  where cell2int c = case c of
+                        Marked -> 0
+                        Number y -> y
+
+-- Solve part 1: find the first winning card
+part1 :: [BingoCard] -> [Int] -> Maybe Int
+part1 cards [] = Nothing
+part1 cards (x:xs) = if (any hasBingo ys) then Just (x * acc) else part1 ys xs
   where ys = [mark x card | card <- cards]
-        bingo = [hasBingo y | y <- ys] -- could use `any hasBingo cards` to get a single anwser
-        check = foldr (||) False [hasBingo x | x <- ys]
+        bingo = [hasBingo y | y <- ys]
         index = maybe 0 id (True `elemIndex` bingo)
-        acc = sum $ filter (>0) (ys !! index)
+        acc = sumCard (ys !! index)
 
-part2 cards [] = -1
-part2 cards (x:xs) = if check then acc*x else part2 ys xs
+-- Solve part 2: find the last winning card
+part2 :: [BingoCard] -> [Int] -> Maybe Int
+part2 cards [] = Nothing
+part2 cards (x:xs) = if (all hasBingo ys) then Just (x * acc) else part2 ys xs
   where ys = [mark x card | card <- cards]
-        bingo = [hasBingo y | y <- ys] -- could use `any hasBingo cards` to get a single anwser
-        check = foldr (&&) True [hasBingo x | x <- ys]
-        prev = [hasBingo y | y <- cards]
-        diff = zipWith (==) bingo prev
+        bingo = [hasBingo y | y <- ys]
+        diff = zipWith (==) bingo [hasBingo y | y <- cards]
         index = maybe 0 id (False `elemIndex` diff)
-        acc = sum $ filter (>0) (ys !! index)
+        acc = sumCard (ys !! index)
 
 main :: IO ()
 main = do
-  entries <- splitOn "\n\n" <$> readFile "input.txt"
-  let numbers = [read x :: Int | x <- (splitOn "," $ entries !! 0)]
-  let boards = tail entries
-  let cards = [[read x :: Int | x <- concat $ map words (lines y)] | y <- boards]
+  (numbers, cards) <- parse . splitOn "\n\n" <$> readFile "input.txt"
 
   print $ part1 cards numbers -- 82440
   print $ part2 cards numbers -- 20774
