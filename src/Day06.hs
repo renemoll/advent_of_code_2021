@@ -1,3 +1,5 @@
+module Day06 (solve) where
+
 import Data.List
 import Data.List.Split
 
@@ -41,9 +43,8 @@ part2 n xs = go n $ entries2hist xs
   where go 0 xs = sum xs
         go n xs = go (n - 1) $ update xs
 
-main :: IO ()
-main = do
-  entries <- parse <$> readFile "input.txt"
-
-  print $ part1 80 entries -- 350149
-  print $ part2 256 entries -- 1590327954513
+solve :: String -> (Int, Int)
+solve input = (s1, s2)
+  where entries = parse input
+        s1 = part1 80 entries -- 350149
+        s2 = part2 256 entries -- 1590327954513

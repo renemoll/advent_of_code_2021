@@ -1,3 +1,5 @@
+module Day10 (solve) where
+
 import Data.Maybe
 import Data.List
 
@@ -75,9 +77,8 @@ part2 xs = result !! (length result `div` 2)
                               '}' -> 3
                               '>' -> 4
 
-main :: IO ()
-main = do
-  entries <- lines <$> readFile "input.txt"
-
-  print $ part1 entries -- 392367
-  print $ part2 entries -- 2192104158
+solve :: String -> (Int, Int)
+solve input = (s1, s2)
+  where entries = lines input
+        s1 = part1 entries -- 392367
+        s2 = part2 entries -- 2192104158

@@ -21,3 +21,18 @@ Linking day_01.exe ...
 
 GHCI
 > docker run -it --rm haskell:8.10
+
+## Developing
+
+Setup:
+```
+> cabal v2-update
+> cabal v2-install -j
+```
+
+Execute:
+```
+> cabal v2-run
+> cabal v2-run advent-of-code2021 -- all
+> cabal v2-run advent-of-code2021 -- last
+```

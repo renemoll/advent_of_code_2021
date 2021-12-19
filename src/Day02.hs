@@ -1,3 +1,4 @@
+module Day02 (solve) where
 
 data Movement = Movement {
   direction :: String,
@@ -29,8 +30,8 @@ calcMovement2 moves = move moves 0 0 0
                 dir = direction m
                 a = amount m
 
-main :: IO ()
-main = do
-  entries <- map parse . lines <$> readFile "input.txt"
-  print $ calcMovement entries
-  print $ calcMovement2 entries
+solve :: String -> (Int, Int)
+solve input = (s1, s2)
+  where numbers = map parse $ lines input
+        s1 = calcMovement numbers
+        s2 = calcMovement2 numbers

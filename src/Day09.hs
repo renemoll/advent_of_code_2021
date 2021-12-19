@@ -1,3 +1,4 @@
+module Day09 (solve) where
 
 parse :: String -> [Int]
 parse xs = map (\x -> read [x]) xs
@@ -16,7 +17,6 @@ isLocalMinimum :: [[Int]] -> Int -> Int -> Bool
 isLocalMinimum xs x y = (minimum zs) > z
   where (z,zs) = getNeighbours xs x y
 
-
 part1 xs = sum $ [1 + x | x <- values]
   where rows = length xs
         cols = length $ xs !! 0
@@ -24,9 +24,8 @@ part1 xs = sum $ [1 + x | x <- values]
         localMin = filter (\a -> isLocalMinimum xs (fst a) (snd a)) points
         values = [(xs !! (fst a)) !! (snd a) | a <- localMin]
 
-
-main :: IO ()
-main = do
-  entries <- map parse . lines <$> readFile "input.txt"
-
-  print $ part1 entries -- 603
+solve :: String -> (Int, Int)
+solve input = (s1, s2)
+  where entries = map parse $ lines input
+        s1 = part1 entries -- 603
+        s2 = 0

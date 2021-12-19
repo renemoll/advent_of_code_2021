@@ -1,3 +1,5 @@
+module Day08 (solve) where
+
 --
 -- Decoding:
 -- * Based on length:
@@ -87,9 +89,9 @@ part2 :: [([String], [String])] -> Int
 part2 xs = sum $ map (\a -> go (fst a) (snd a)) xs
   where go xs ys = decode (determineEncoding xs) ys
 
-main :: IO ()
-main = do
-  entries <- map parse . lines <$> readFile "input.txt"
 
-  print $ part1 entries -- 247
-  print $ part2 entries -- 933305
+solve :: String -> (Int, Int)
+solve input = (s1, s2)
+  where entries = map parse $ lines input
+        s1 = part1 entries -- 247
+        s2 = part2 entries -- 933305

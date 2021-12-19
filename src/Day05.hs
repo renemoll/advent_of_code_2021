@@ -1,3 +1,5 @@
+module Day05 (solve) where
+
 import Data.List
 import Data.List.Split
 
@@ -46,9 +48,8 @@ part2 xs = length $ filter (>1) lengths
         matched = group $ sort $ concat points
         lengths = map length matched
 
-main :: IO ()
-main = do
-  entries <- parse <$> readFile "input.txt"
-
-  print $ part1 entries -- 5092
-  print $ part2 entries -- 20484
+solve :: String -> (Int, Int)
+solve input = (s1, s2)
+  where entries = parse input
+        s1 = part1 entries -- 5092
+        s2 = part2 entries -- 20484
