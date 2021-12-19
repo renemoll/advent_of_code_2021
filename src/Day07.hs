@@ -1,10 +1,9 @@
 module Day07 (solve) where
 
-import Data.List
 import Data.List.Split
 
-parse :: String -> [Int]
-parse xs = map (read :: String -> Int) $ splitOn "," xs
+parse :: String -> Int
+parse = read :: String -> Int
 
 -- Generate a list of numbers from x to y (both positive as negative)
 generateRange :: Int -> Int -> [Int]
@@ -14,26 +13,22 @@ generateRange x y = if x <= y
 
 -- Determine the difference between a fixed number and all elements in a list
 diff :: Int -> [Int] -> [Int]
-diff n xs = map (abs . subtract n) xs
+diff n = map (abs . subtract n)
 
 part1 :: [Int] -> Int
-part1 xs = lowest
+part1 xs = minimum $ map (\a -> sum $ diff a xs) range
   where range = generateRange (minimum xs) (maximum xs)
-        result = map (\a -> sum $ diff a xs) range
-        lowest = minimum result
 
 -- Calculate the costs for each movement
 costs :: [Int] -> [Int]
-costs xs = map (\a -> sum $ generateRange 0 a) xs
+costs = map (sum . generateRange 0)
 
 part2 :: [Int] -> Int
-part2 xs = lowest
+part2 xs = minimum $ map (\a -> sum $ costs $ diff a xs) range
   where range = generateRange (minimum xs) (maximum xs)
-        result = map (\a -> sum $ costs $ diff a xs) range
-        lowest = minimum result
 
 solve :: String -> (Int, Int)
 solve input = (s1, s2)
-  where entries = parse input
+  where entries = map parse $ splitOn "," input
         s1 = part1 entries -- 356958
         s2 = part2 entries -- 105461913

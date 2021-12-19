@@ -16,16 +16,13 @@ data Result = Incomplete [Bracket]
 isOpeningBracket :: Char -> Bool
 isOpeningBracket x = isJust $ translateOpener x
 
-isClosingBracket :: Char -> Bool
-isClosingBracket x = isJust $ translateCloser x
-
 translateOpener :: Char -> Maybe Bracket
 translateOpener x =
   case x of '(' -> Just RoundBracket
             '[' -> Just SquareBracket
             '{' -> Just CurlyBracket
             '<' -> Just AngleBracket
-            otherwise -> Nothing
+            _ -> Nothing
 
 translateCloser :: Char -> Maybe Bracket
 translateCloser x =
@@ -33,7 +30,7 @@ translateCloser x =
             ']' -> Just SquareBracket
             '}' -> Just CurlyBracket
             '>' -> Just AngleBracket
-            otherwise -> Nothing
+            _ -> Nothing
 
 bracket2closer :: Bracket -> Char
 bracket2closer x =
@@ -45,13 +42,11 @@ bracket2closer x =
 checkLine :: String -> Result
 checkLine xs = go xs [] []
   where go :: String -> [Bracket] -> String -> Result
-        go [] ys zs = Incomplete ys
-        go (x:xs) ys zs = if isOpeningBracket x
-                  then go xs (ys ++ [fromJust $ translateOpener x]) (zs ++ [x])
-                  else
-                    if (last ys) == (fromJust $ translateCloser x)
-                    then go xs (init ys) (init zs)
-                    else Illegal x
+        go [] zs _ = Incomplete zs
+        go (y:ys) zs as
+          | isOpeningBracket y = go ys (zs ++ [fromJust $ translateOpener y]) (as ++ [y])
+          | last zs == fromJust (translateCloser y) = go ys (init zs) (init as)
+          | otherwise = Illegal y
 
 part1 :: [String] -> Int
 part1 xs = sum $ map (points . checkLine) xs
@@ -62,20 +57,22 @@ part1 xs = sum $ map (points . checkLine) xs
                                 ']' -> 57
                                 '}' -> 1197
                                 '>' -> 25137
+                                _ -> 0
 
 part2 :: [String] -> Int
 part2 xs = result !! (length result `div` 2)
-  where closers = filter (\a -> length a > 0) $ map (remainder . checkLine) xs
+  where closers = filter (not . null) $ map (remainder . checkLine) xs
         remainder x =
           case x of Incomplete ys -> [bracket2closer y | y <- ys]
                     Illegal _ -> []
         result = sort [points2 c | c <- closers]
         points2 [] = 0
-        points2 (c:cs) = p + 5 * (points2 cs)
+        points2 (c:cs) = p + 5 * points2 cs
           where p = case c of ')' -> 1
                               ']' -> 2
                               '}' -> 3
                               '>' -> 4
+                              _ -> 0
 
 solve :: String -> (Int, Int)
 solve input = (s1, s2)

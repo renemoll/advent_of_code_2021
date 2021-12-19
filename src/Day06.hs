@@ -3,8 +3,8 @@ module Day06 (solve) where
 import Data.List
 import Data.List.Split
 
-parse :: String -> [Int]
-parse xs = map (read :: String -> Int) $ splitOn "," xs
+parse :: String -> Int
+parse = read :: String -> Int
 
 --
 -- Solution 1: naive
@@ -14,10 +14,10 @@ parse xs = map (read :: String -> Int) $ splitOn "," xs
 --
 iterateDay :: [Int] -> [Int]
 iterateDay [] = []
-iterateDay (x:xs) = (go x) ++ (iterateDay xs)
-  where go x
-          | x == 0 = [6, 8]
-          | otherwise = [x - 1]
+iterateDay (x:xs) = go x ++ iterateDay xs
+  where go y
+          | y == 0 = [6, 8]
+          | otherwise = [y - 1]
 
 part1 :: Int -> [Int] -> Int
 part1 0 xs = length xs
@@ -35,16 +35,17 @@ entries2hist xs = map (\a -> a -1) zs
         zs = map length (group (sort $ xs ++ ys))
 
 update :: [Int] -> [Int]
+update [] = []
 update (x:xs) = pre ++ [y + x] ++ ys ++ [x]
-  where (pre,(y:ys)) = splitAt 6 xs
+  where (pre,y:ys) = splitAt 6 xs
 
 part2 :: Int -> [Int] -> Int
 part2 n xs = go n $ entries2hist xs
-  where go 0 xs = sum xs
-        go n xs = go (n - 1) $ update xs
+  where go 0 ys = sum ys
+        go i ys = go (i - 1) $ update ys
 
 solve :: String -> (Int, Int)
 solve input = (s1, s2)
-  where entries = parse input
+  where entries = map parse $ splitOn "," input
         s1 = part1 80 entries -- 350149
         s2 = part2 256 entries -- 1590327954513
