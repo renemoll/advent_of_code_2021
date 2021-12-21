@@ -74,8 +74,8 @@ part2 xs = result !! (length result `div` 2)
                               '>' -> 4
                               _ -> 0
 
-solve :: String -> (Int, Int)
+solve :: String -> (String, String)
 solve input = (s1, s2)
   where entries = lines input
-        s1 = part1 entries -- 392367
-        s2 = part2 entries -- 2192104158
+        s1 = show $ part1 entries -- 392367
+        s2 = show $ part2 entries -- 2192104158

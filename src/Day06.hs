@@ -44,8 +44,8 @@ part2 n xs = go n $ entries2hist xs
   where go 0 ys = sum ys
         go i ys = go (i - 1) $ update ys
 
-solve :: String -> (Int, Int)
+solve :: String -> (String, String)
 solve input = (s1, s2)
   where entries = map parse $ splitOn "," input
-        s1 = part1 80 entries -- 350149
-        s2 = part2 256 entries -- 1590327954513
+        s1 = show $ part1 80 entries -- 350149
+        s2 = show $ part2 256 entries -- 1590327954513

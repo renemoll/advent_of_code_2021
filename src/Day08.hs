@@ -91,8 +91,8 @@ part2 :: [([String], [String])] -> Int
 part2 xs = sum $ map (uncurry go) xs
   where go ys = decode (determineEncoding ys)
 
-solve :: String -> (Int, Int)
+solve :: String -> (String, String)
 solve input = (s1, s2)
   where entries = map parse $ lines input
-        s1 = part1 entries -- 247
-        s2 = part2 entries -- 933305
+        s1 = show $ part1 entries -- 247
+        s2 = show $ part2 entries -- 933305

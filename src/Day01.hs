@@ -15,8 +15,8 @@ sumThreeMeasurements _ = []
 nofIncrements3 :: [Int] -> Int
 nofIncrements3 numbers = nofIncrements (sumThreeMeasurements numbers)
 
-solve :: String -> (Int, Int)
+solve :: String -> (String, String)
 solve input = (s1, s2)
   where numbers = map parse $ lines input
-        s1 = nofIncrements numbers -- 1301
-        s2 = nofIncrements3 numbers -- 1346
+        s1 = show $ nofIncrements numbers -- 1301
+        s2 = show $ nofIncrements3 numbers -- 1346

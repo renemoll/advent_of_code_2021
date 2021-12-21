@@ -65,8 +65,8 @@ part1 xs = visit (canVisit . Map.keys) xs
 part2 :: Map.Map Cave [Cave] -> Int
 part2 xs = visit canVisitAlt xs
 
-solve :: String -> (Int, Int)
+solve :: String -> (String, String)
 solve input = (s1, s2)
   where entries = parse input
-        s1 = part1 entries -- 3450
-        s2 = part2 entries -- 96528
+        s1 = show $ part1 entries -- 3450
+        s2 = show $ part2 entries -- 96528

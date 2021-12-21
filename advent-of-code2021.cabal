@@ -30,6 +30,7 @@ library aoc2021
       Day10
       Day11
       Day12
+      Day13
 
 executable advent-of-code2021
     main-is:          Main.hs

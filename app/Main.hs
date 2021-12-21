@@ -12,11 +12,12 @@ import Day09
 import Day10
 import Day11
 import Day12
+import Day13
 
 days :: [String -> (Int, Int)]
 days = [Day01.solve,
-        Day02.solve,
         Day03.solve,
+        Day02.solve,
         Day04.solve,
         Day05.solve,
         Day06.solve,
@@ -25,15 +26,16 @@ days = [Day01.solve,
         Day09.solve,
         Day10.solve,
         Day11.solve,
-        Day12.solve]
+        Day12.solve,
+        Day13.solve]
 
 solveDay :: Int -> IO()
 solveDay n = do
   input <- readFile $ concat ["./data/day_", show n, ".txt"]
   putStrLn $ "Solving day " ++ show n
   let (s1, s2) = (days !! (n - 1)) input
-  putStrLn $ "- part 1: " ++ show s1
-  putStrLn $ "- part 2: " ++ show s2
+  putStrLn $ "- part 1: " ++ s1
+  putStrLn $ "- part 2: " ++ s2
 
 runAll :: IO()
 runAll = do

@@ -69,8 +69,8 @@ part2 cards (x:xs) = if all hasBingo ys then Just (x * acc) else part2 ys xs
         index = fromMaybe 0 $ False `elemIndex` diff
         acc = sumCard (ys !! index)
 
-solve :: String -> (Int, Int)
+solve :: String -> (String, String)
 solve input = (s1, s2)
   where (numbers, cards) = parse $ splitOn "\n\n" input
-        s1 = fromJust $ part1 cards numbers -- 82440
-        s2 = fromJust $ part2 cards numbers -- 20774
+        s1 = show $ fromJust $ part1 cards numbers -- 82440
+        s2 = show $ fromJust $ part2 cards numbers -- 20774

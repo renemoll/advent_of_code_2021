@@ -27,8 +27,8 @@ part2 :: [Int] -> Int
 part2 xs = minimum $ map (\a -> sum $ costs $ diff a xs) range
   where range = generateRange (minimum xs) (maximum xs)
 
-solve :: String -> (Int, Int)
+solve :: String -> (String, String)
 solve input = (s1, s2)
   where entries = map parse $ splitOn "," input
-        s1 = part1 entries -- 356958
-        s2 = part2 entries -- 105461913
+        s1 = show $ part1 entries -- 356958
+        s2 = show $ part2 entries -- 105461913

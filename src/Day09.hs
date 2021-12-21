@@ -25,8 +25,8 @@ part1 xs = sum $ [1 + x | x <- values]
         localMin = filter (uncurry (isLocalMinimum xs)) points
         values = [(xs !! fst a) !! snd a | a <- localMin]
 
-solve :: String -> (Int, Int)
+solve :: String -> (String, String)
 solve input = (s1, s2)
   where entries = map parse $ lines input
-        s1 = part1 entries -- 603
-        s2 = 0
+        s1 = show $ part1 entries -- 603
+        s2 = show $ 0

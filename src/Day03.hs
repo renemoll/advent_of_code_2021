@@ -43,8 +43,8 @@ part2 xs = bin2dec oxi * bin2dec co2
   where oxi = select mostCommon xs
         co2 = select leastCommon xs
 
-solve :: String -> (Int, Int)
+solve :: String -> (String, String)
 solve input = (s1, s2)
   where numbers = map parse $ lines input
-        s1 = part1 numbers -- 1131506
-        s2 = part2 numbers -- 7863147
+        s1 = show $ part1 numbers -- 1131506
+        s2 = show $ part2 numbers -- 7863147

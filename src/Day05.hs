@@ -48,8 +48,8 @@ part1 xs = countOverlap validLines
 part2 :: [Line] -> Int
 part2 = countOverlap
 
-solve :: String -> (Int, Int)
+solve :: String -> (String, String)
 solve input = (s1, s2)
   where entries = map parse $ lines input
-        s1 = part1 entries -- 5092
-        s2 = part2 entries -- 20484
+        s1 = show $ part1 entries -- 5092
+        s2 = show $ part2 entries -- 20484

@@ -34,8 +34,8 @@ part2 moves = step moves 0 0 0
                 dir = direction m
                 a = amount m
 
-solve :: String -> (Int, Int)
+solve :: String -> (String, String)
 solve input = (s1, s2)
   where entries = map parse $ lines input
-        s1 = part1 entries -- 1746616
-        s2 = part2 entries -- 1741971043
+        s1 = show $ part1 entries -- 1746616
+        s2 = show $ part2 entries -- 1741971043
