@@ -13,6 +13,7 @@ import Day10
 import Day11
 import Day12
 import Day13
+import Day14
 
 days :: [String -> (Int, Int)]
 days = [Day01.solve,
@@ -27,7 +28,8 @@ days = [Day01.solve,
         Day10.solve,
         Day11.solve,
         Day12.solve,
-        Day13.solve]
+        Day13.solve,
+        Day14.solve]
 
 solveDay :: Int -> IO()
 solveDay n = do
