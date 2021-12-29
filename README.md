@@ -26,13 +26,26 @@ GHCI
 
 Setup:
 ```
-> cabal v2-update
-> cabal v2-build -j
+> cabal update
+> cabal install --only-dependencies
 ```
+
+or:
+```
+> cabal install --only-dependencies --enable-library-profiling
+```
+> On my machine I had to omit the `--only-dependencies` flag
+
+
+To build:
+```
+> cabal build -j
+```
+
 
 Execute:
 ```
-> cabal v2-run
-> cabal v2-run advent-of-code2021 -- all
-> cabal v2-run advent-of-code2021 -- last
+> cabal run
+> cabal run advent-of-code2021 -- all
+> cabal run advent-of-code2021 -- last
 ```
