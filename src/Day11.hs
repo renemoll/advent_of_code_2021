@@ -1,5 +1,7 @@
 module Day11 (solve) where
 
+parse x = x
+
 part1 _ = 0
 
 part2 _ = 0

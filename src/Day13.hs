@@ -49,6 +49,6 @@ part2 folds entries = printCode $ go folds entries
 
 solve :: String -> (String, String)
 solve input = (s1, s2)
-  where (entries, folds) <- parse input
+  where (entries, folds) = parse input
         s1 = show $ part1 folds entries -- 693
         s2 = part2 folds entries -- UCLZRAZUs

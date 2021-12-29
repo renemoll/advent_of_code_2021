@@ -27,7 +27,7 @@ GHCI
 Setup:
 ```
 > cabal v2-update
-> cabal v2-install -j
+> cabal v2-build -j
 ```
 
 Execute:

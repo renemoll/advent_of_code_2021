@@ -14,36 +14,36 @@ parse = Map.fromList . foldMap (\(x,l) -> map (\(y,v) -> ((x, y), read [v])) l)
 
 getNeighbours :: Graph -> Coordinate -> [Coordinate]
 getNeighbours riskMap (x,y) = [fromJust r | r <- result, isJust r]
-where ((rows, cols), _) = fromJust $ Map.lookupMax riskMap
-      result = let
-                left = if x > 0 then Just (x - 1, y) else Nothing
-                right = if x < cols then Just (x + 1, y) else Nothing
-                up = if y > 0 then Just (x, y - 1) else Nothing
-                down = if y < rows then Just (x, y + 1) else Nothing
-              in [left, right, up, down]
+  where ((rows, cols), _) = fromJust $ Map.lookupMax riskMap
+        result = let
+                  left = if x > 0 then Just (x - 1, y) else Nothing
+                  right = if x < cols then Just (x + 1, y) else Nothing
+                  up = if y > 0 then Just (x, y - 1) else Nothing
+                  down = if y < rows then Just (x, y + 1) else Nothing
+                  in [left, right, up, down]
 
 calcRisk :: Graph -> Coordinate -> Int
 calcRisk riskMap end = go (Map.singleton 0 [(0,0)]) []
-where go :: Lookup -> [Coordinate] -> Int
-      go vQ visited
-        | end `elem` minCoordinates = minRisk
-        | otherwise = go altUnique visitedUnique
-        where ((minRisk, minCoordinates), newQ) = fromJust $ Map.minViewWithKey vQ
-              neighbours = filter (\a -> not (a `elem` visited)) $ concatMap (getNeighbours riskMap) minCoordinates
-              scorePoint :: Coordinate -> Int
-              scorePoint p = minRisk + riskMap Map.! p
-              alt = foldr (\p acc -> Map.insertWith (++) (scorePoint p) [p] acc) newQ neighbours
-              altUnique = Map.map nub alt
-              visitedUnique = nub $ visited ++ minCoordinates
+  where go :: Lookup -> [Coordinate] -> Int
+        go vQ visited
+          | end `elem` minCoordinates = minRisk
+          | otherwise = go altUnique visitedUnique
+          where ((minRisk, minCoordinates), newQ) = fromJust $ Map.minViewWithKey vQ
+                neighbours = filter (\a -> not (a `elem` visited)) $ concatMap (getNeighbours riskMap) minCoordinates
+                scorePoint :: Coordinate -> Int
+                scorePoint p = minRisk + riskMap Map.! p
+                alt = foldr (\p acc -> Map.insertWith (++) (scorePoint p) [p] acc) newQ neighbours
+                altUnique = Map.map nub alt
+                visitedUnique = nub $ visited ++ minCoordinates
 
 part1 xs = calcRisk xs destination
-  where (destination, _) = fromJust $ Map.lookupMax entries
+  where (destination, _) = fromJust $ Map.lookupMax xs
 
 part2 _ = 0
 
 
 solve :: String -> (String, String)
 solve input = (s1, s2)
-  where entries = map parse $ lines input
+  where entries = parse input
         s1 = show $ part1 entries -- 755
         s2 = show $ part2 entries --

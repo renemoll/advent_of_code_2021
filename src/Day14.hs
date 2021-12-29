@@ -73,6 +73,6 @@ count2 input = Map.map (flip div 2) $ Map.fromListWith (+) $ result
 
 solve :: String -> (String, String)
 solve input = (s1, s2)
-  where (template, rules) <- parse input
+  where (template, rules) = parse input
         s1 = show $ part1 rules 10 template -- 2899
         s2 = show $ part2 rules 40 template -- 3528317079545

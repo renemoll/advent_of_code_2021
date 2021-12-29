@@ -29,4 +29,4 @@ solve :: String -> (String, String)
 solve input = (s1, s2)
   where entries = map parse $ lines input
         s1 = show $ part1 entries -- 603
-        s2 = show $ 0
+        s2 = show 0

@@ -16,7 +16,7 @@ import Day13
 import Day14
 import Day15
 
-days :: [String -> (Int, Int)]
+days :: [String -> (String, String)]
 days = [Day01.solve,
         Day03.solve,
         Day02.solve,
