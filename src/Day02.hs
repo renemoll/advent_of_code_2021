@@ -12,25 +12,27 @@ parse input = Movement d a
 
 part1 :: [Movement] -> Int
 part1 moves = step moves 0 0
+        -- step: process a move into the forward and depth component
   where step [] f d = f * d
-        step ms f d
-          | dir == "forward" = step (tail ms) (f + a) d
-          | dir == "down" = step (tail ms) f (d + a)
-          | dir == "up" = step (tail ms) f (d - a)
+        step mvs f d
+          | dir == "forward" = step (tail mvs) (f + a) d
+          | dir == "down" = step (tail mvs) f (d + a)
+          | dir == "up" = step (tail mvs) f (d - a)
           | otherwise = error "incorrect direction, valid options are: forward, down, up"
-          where m = head ms
+          where m = head mvs
                 dir = direction m
                 a = amount m
 
 part2 :: [Movement] -> Int
 part2 moves = step moves 0 0 0
+  -- step: process a move into the forward, depth and aim component
   where step [] f d _ = f * d
-        step ms f d aim
-          | dir == "forward" = step (tail ms) (f + a) (d + aim * a) aim
-          | dir == "down" = step (tail ms) f d (aim + a)
-          | dir == "up" = step (tail ms) f d (aim - a)
+        step mvs f d aim
+          | dir == "forward" = step (tail mvs) (f + a) (d + aim * a) aim
+          | dir == "down" = step (tail mvs) f d (aim + a)
+          | dir == "up" = step (tail mvs) f d (aim - a)
           | otherwise = error "incorrect direction, valid options are: forward, down, up"
-          where m = head ms
+          where m = head mvs
                 dir = direction m
                 a = amount m
 

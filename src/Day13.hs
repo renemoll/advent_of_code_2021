@@ -2,18 +2,18 @@ module Day13 (solve) where
 
 import Data.List
 import Data.List.Split
-import Data.Ord
 
 parse :: String -> ([(Int, Int)], [(String, Int)])
 parse xs = (map parseDots (lines dots), map parseFolds (lines folds))
   where [dots, folds] = splitOn "\n\n" xs
         parseDots :: String -> (Int, Int)
-        parseDots xs = toTuple $ map (\a -> read a :: Int) $ splitOn "," xs
+        parseDots ys = toTuple $ map (\a -> read a :: Int) $ splitOn "," ys
         toTuple :: [Int] -> (Int, Int)
         toTuple [x,y] = (x,y)
+        toTuple _ = error "Invalid argument"
         parseFolds :: String -> (String, Int)
-        parseFolds xs = let
-                          [a,b] = splitOn "=" xs
+        parseFolds ys = let
+                          [a,b] = splitOn "=" ys
                         in (drop 11 a, read b)
 
 foldX :: Int -> [(Int, Int)] -> [(Int, Int)]
@@ -32,6 +32,7 @@ unique = map head . group . sort
 applyFold :: (String, Int) -> [(Int, Int)] -> [(Int, Int)]
 applyFold ("y", n) xs = foldY n xs
 applyFold ("x", n) xs = foldX n xs
+applyFold _ _ = error "Invalid argument"
 
 part1 :: [(String, Int)] -> [(Int, Int)] -> Int
 part1 folds entries = length $ unique $ applyFold (head folds) entries

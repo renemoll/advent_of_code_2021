@@ -29,18 +29,19 @@ calcRisk riskMap end = go (Map.singleton 0 [(0,0)]) []
           | end `elem` minCoordinates = minRisk
           | otherwise = go altUnique visitedUnique
           where ((minRisk, minCoordinates), newQ) = fromJust $ Map.minViewWithKey vQ
-                neighbours = filter (\a -> not (a `elem` visited)) $ concatMap (getNeighbours riskMap) minCoordinates
+                neighbours = filter (`notElem` visited) $ concatMap (getNeighbours riskMap) minCoordinates
                 scorePoint :: Coordinate -> Int
                 scorePoint p = minRisk + riskMap Map.! p
                 alt = foldr (\p acc -> Map.insertWith (++) (scorePoint p) [p] acc) newQ neighbours
                 altUnique = Map.map nub alt
                 visitedUnique = nub $ visited ++ minCoordinates
 
+part1 :: Graph -> Int
 part1 xs = calcRisk xs destination
   where (destination, _) = fromJust $ Map.lookupMax xs
 
+part2 :: Graph -> Int
 part2 _ = 0
-
 
 solve :: String -> (String, String)
 solve input = (s1, s2)

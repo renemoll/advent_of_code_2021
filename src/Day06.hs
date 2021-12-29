@@ -30,7 +30,7 @@ part1 n xs = part1 (n - 1) $ iterateDay xs
 -- of each fish individually, keep track of how many fish are at which specific 'age'.
 --
 entries2hist :: [Int] -> [Int]
-entries2hist xs = map (\a -> a -1) zs
+entries2hist xs = map (\a -> a - 1) zs
   where ys = [0..8]
         zs = map length (group (sort $ xs ++ ys))
 
