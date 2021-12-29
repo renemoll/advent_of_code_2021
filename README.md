@@ -30,22 +30,26 @@ Setup:
 > cabal install --only-dependencies
 ```
 
-or:
-```
-> cabal install --only-dependencies --enable-library-profiling
-```
-> On my machine I had to omit the `--only-dependencies` flag
-
-
 To build:
 ```
 > cabal build -j
 ```
-
 
 Execute:
 ```
 > cabal run
 > cabal run advent-of-code2021 -- all
 > cabal run advent-of-code2021 -- last
+```
+
+### For profiling
+
+build:
+```
+> cabal build -j --enable-profiling
+```
+
+Execute:
+```
+> cabal run advent-of-code2021 --enable-profiling -- last +RTS -p
 ```

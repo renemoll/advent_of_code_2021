@@ -34,7 +34,7 @@ calcRisk riskMap end = go (Map.singleton 0 [(0,0)]) []
                 scorePoint p = minRisk + riskMap Map.! p
                 alt = foldr (\p acc -> Map.insertWith (++) (scorePoint p) [p] acc) newQ neighbours
                 altUnique = Map.map nub alt
-                visitedUnique = nub $ visited ++ minCoordinates
+                visitedUnique = visited ++ (filter (`notElem` visited) minCoordinates)
 
 part1 :: Graph -> Int
 part1 xs = calcRisk xs destination
