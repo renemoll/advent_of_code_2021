@@ -14,8 +14,7 @@ library aoc2021
     build-depends:
           base ^>=4.14.3.0,
           containers,
-          split,
-          vector
+          split
     hs-source-dirs:   src
     default-language: Haskell2010
     ghc-options:

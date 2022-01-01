@@ -1,13 +1,12 @@
 module Day15 (solve) where
 
-import Data.List
 import Data.Maybe
 import qualified Data.Map as Map
-import qualified Data.Vector as Vector
+import qualified Data.Set as Set
 
 type Coordinate = (Int, Int)
 type Graph = Map.Map Coordinate Int
-type Lookup =  Map.Map Int (Vector.Vector Coordinate)
+type Lookup =  Map.Map Int (Set.Set Coordinate)
 
 parse :: String -> Graph
 parse = Map.fromList . foldMap (\(x,l) -> map (\(y,v) -> ((x, y), read [v])) l)
@@ -24,8 +23,8 @@ getNeighbours riskMap (x,y) = [fromJust r | r <- result, isJust r]
                   in [left, right, up, down]
 
 calcRisk :: Graph -> Coordinate -> Int
-calcRisk riskMap end = go (Map.singleton 0 (Vector.singleton (0,0))) Vector.empty
-  where go :: Lookup -> Vector.Vector Coordinate -> Int
+calcRisk riskMap end = go (Map.singleton 0 (Set.singleton (0,0))) Set.empty
+  where go :: Lookup -> Set.Set Coordinate -> Int
         go vQ visited
           | end `elem` minCoordinates = minRisk
           | otherwise = go alt visitedUnique
@@ -33,9 +32,8 @@ calcRisk riskMap end = go (Map.singleton 0 (Vector.singleton (0,0))) Vector.empt
                 neighbours = filter (`notElem` visited) $ concatMap (getNeighbours riskMap) minCoordinates
                 scorePoint :: Coordinate -> Int
                 scorePoint p = minRisk + riskMap Map.! p
-                alt = foldr (\p acc -> Map.insertWith (Vector.++) (scorePoint p) (Vector.singleton p) acc) newQ neighbours
---                altUnique = Map.map nub alt
-                visitedUnique = visited Vector.++ Vector.filter (`notElem` visited) minCoordinates
+                alt = foldr (\p acc -> Map.insertWith Set.union (scorePoint p) (Set.singleton p) acc) newQ neighbours
+                visitedUnique = Set.union visited $ Set.filter (`notElem` visited) minCoordinates
 
 part1 :: Graph -> Int
 part1 xs = calcRisk xs destination
