@@ -29,11 +29,12 @@ calcRisk riskMap end = go (Map.singleton 0 (Set.singleton (0,0))) Set.empty
           | end `elem` minCoordinates = minRisk
           | otherwise = go alt visitedUnique
           where ((minRisk, minCoordinates), newQ) = fromJust $ Map.minViewWithKey vQ
-                neighbours = filter (`notElem` visited) $ concatMap (getNeighbours riskMap) minCoordinates
+                neighbours = concatMap (getNeighbours riskMap) minCoordinates
+                newNeighbours = Set.difference (Set.fromList neighbours) visited
                 scorePoint :: Coordinate -> Int
                 scorePoint p = minRisk + riskMap Map.! p
-                alt = foldr (\p acc -> Map.insertWith Set.union (scorePoint p) (Set.singleton p) acc) newQ neighbours
-                visitedUnique = Set.union visited $ Set.filter (`notElem` visited) minCoordinates
+                alt = foldr (\p acc -> Map.insertWith Set.union (scorePoint p) (Set.singleton p) acc) newQ newNeighbours
+                visitedUnique = Set.union visited $ Set.difference minCoordinates visited
 
 part1 :: Graph -> Int
 part1 xs = calcRisk xs destination
@@ -58,4 +59,4 @@ solve :: String -> (String, String)
 solve input = (s1, s2)
   where entries = parse input
         s1 = show $ part1 entries -- 755
-        s2 = show $ part2 entries -- ?
+        s2 = show $ part2 entries -- 3016
