@@ -34,17 +34,29 @@ calcRisk riskMap end = go (Map.singleton 0 [(0,0)]) []
                 scorePoint p = minRisk + riskMap Map.! p
                 alt = foldr (\p acc -> Map.insertWith (++) (scorePoint p) [p] acc) newQ neighbours
                 altUnique = Map.map nub alt
-                visitedUnique = visited ++ (filter (`notElem` visited) minCoordinates)
+                visitedUnique = visited ++ filter (`notElem` visited) minCoordinates
 
 part1 :: Graph -> Int
 part1 xs = calcRisk xs destination
   where (destination, _) = fromJust $ Map.lookupMax xs
 
+expandMap :: Graph -> Int -> Graph
+expandMap riskMap n = foldr Map.union Map.empty [go (x, y) | x <- [0..(n-1)], y <- [0..(n-1)]]
+  where ((l,_), _) = fromJust $ Map.lookupMax riskMap
+        shiftMap :: (Int, Int) -> Graph
+        shiftMap (x0, y0) = Map.mapKeys (\(x,y) -> (x0 + x, y0 + y)) riskMap
+        increaseMap :: Int -> Graph -> Graph
+        increaseMap x = Map.map (\a -> if (a + x) <= 9 then a + x else ((a + x) `mod` 10) + 1)
+        go (x,y) = increaseMap (x + y) $ shiftMap s
+          where s = ((l + 1) * x, (l + 1) * y)
+
 part2 :: Graph -> Int
-part2 _ = 0
+part2 xs = calcRisk extendedMap destination
+  where extendedMap = expandMap xs 5
+        (destination, _) = fromJust $ Map.lookupMax extendedMap
 
 solve :: String -> (String, String)
 solve input = (s1, s2)
   where entries = parse input
         s1 = show $ part1 entries -- 755
-        s2 = show $ part2 entries --
+        s2 = show $ part2 entries -- ?
