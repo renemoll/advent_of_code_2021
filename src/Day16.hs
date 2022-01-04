@@ -41,15 +41,14 @@ module Day16 (solve) where
 import Data.List
 import Data.Maybe
 
-
 data LengthType = Bits Int
                   | Packets Int
                   deriving (Show)
 
-
 data Packet = Literal { pVersion :: Int,
                         pValue :: Int }
               | Operator { pVersion :: Int,
+                           pOperation :: Int,
                            pSubs :: [Packet] }
               deriving (Show)
 
@@ -98,7 +97,7 @@ parseOperator xs = (op, drop bits stream)
 parsePacket :: [Int] -> (Packet, [Int])
 parsePacket xs = case t of
                   4 -> (Literal v l, x3)
-                  _ -> (Operator v subs, x5)
+                  _ -> (Operator v t subs, x5)
   where (v, x1) = parseVersion xs
         (t, x2) = parseType x1
         (l, x3) = parseLiteral x2
@@ -109,12 +108,12 @@ parseSubPackets :: LengthType -> [Int] -> ([Packet], [Int])
 parseSubPackets (Bits bits) xs = (go (take bits xs) [], drop bits xs)
   where go :: [Int] -> [Packet] -> [Packet]
         go [] output = output
-        go input output = go remainder (p : output)
+        go input output = go remainder (output ++ [p])
           where (p, remainder) = parsePacket input
 parseSubPackets (Packets n) xs = go n xs []
   where go :: Int -> [Int] -> [Packet] -> ([Packet], [Int])
         go 0 input output = (output, input)
-        go i input output = go (i - 1) remainder (p:output)
+        go i input output = go (i - 1) remainder (output ++ [p])
           where (p, remainder) = parsePacket input
 
 parse :: String -> Packet
@@ -123,16 +122,25 @@ parse xs = fst (parsePacket stream)
 
 sumVersion :: Packet -> Int
 sumVersion (Literal v _) = v
-sumVersion (Operator v s) = v + sum (0:map sumVersion s)
+sumVersion (Operator v _ s) = v + sum (0:map sumVersion s)
 
 part1 :: Packet -> Int
 part1 = sumVersion
 
 part2 :: Packet -> Int
-part2 _ = 0
+part2 (Literal _ v) = v
+part2 (Operator _ opcode children) = case opcode of
+  0 -> sum (0:map part2 children)
+  1 -> product (map part2 children)
+  2 -> minimum (map part2 children)
+  3 -> maximum (map part2 children)
+  5 -> let [a,b] = map part2 children in if a > b then 1 else 0
+  6 -> let [a,b] = map part2 children in if a < b then 1 else 0
+  7 -> let [a,b] = map part2 children in if a == b then 1 else 0
+  _ -> error "Invalid operation"
 
 solve :: String -> (String, String)
 solve input = (s1, s2)
   where entries = parse input
         s1 = show $ part1 entries -- 895
-        s2 = show $ part2 entries -- ?
+        s2 = show $ part2 entries -- 1148595959144
