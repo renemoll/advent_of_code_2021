@@ -1,8 +1,5 @@
 module Day18 (solve) where
 
-import Data.Maybe
-import qualified Data.Map as Map
-
 data Tree a = Node (Tree a) (Tree a)
             | Value a
             deriving (Show, Eq)
@@ -23,10 +20,10 @@ add x _ (Value y) = Value (x + y)
 
 -- explode only returns a tree is something changed
 explode :: Tree Int -> Maybe (Tree Int)
-explode x = maybe Nothing (\(x,_,_) -> Just x) $ go 0 x
+explode x = maybe Nothing (\(y,_,_) -> Just y) $ go 0 x
   where -- go returns a tree and two values (L,R)
         go :: Int -> Tree Int -> Maybe (Tree Int, Int, Int)
-        go _ (Value a) = Nothing
+        go _ (Value _) = Nothing
         go 4 (Node (Value a) (Value b)) = Just (Value 0, a, b)
         go d (Node a b) = let
                             left = go (d + 1) a -- left = Just (Tree, Int, Int) or Nothing
@@ -36,7 +33,7 @@ explode x = maybe Nothing (\(x,_,_) -> Just x) $ go 0 x
                             carryRight :: (Tree Int, Int, Int) -> Maybe (Tree Int, Int, Int)
                             carryRight (node, carryL, carryR) = Just (Node (add carryL CarryRight a) node, 0, carryR)
                           in case maybe Nothing carryLeft left of
-                            Just x -> Just x
+                            Just y -> Just y
                             Nothing -> maybe Nothing carryRight right
 
 split :: Tree Int -> Maybe (Tree Int)
@@ -60,7 +57,7 @@ reduce x = maybe (doSplit x) reduce (explode x)
   where doSplit y = maybe x reduce (split y)
 
 parse :: String -> [Tree Int]
-parse = map (\a -> fst $ go a) . lines
+parse = map (fst . go) . lines
   where go ('[':xs) = let
                         (lhs, ys) = go xs
                         (rhs, zs) = go ys
@@ -72,7 +69,7 @@ parse = map (\a -> fst $ go a) . lines
         go x = (Value (read x :: Int), "")
 
 magnitude :: Tree Int -> Int
-magnitude (Node a b) = 3 * (magnitude a) + 2 * (magnitude b)
+magnitude (Node a b) = 3 * magnitude a + 2 * magnitude b
 magnitude (Value a) = a
 
 part1 :: [Tree Int] -> Int
@@ -80,7 +77,7 @@ part1 x = magnitude t
   where t = foldl (\a b -> reduce (Node a b)) (head x) (tail x)
 
 part2 :: [Tree Int] -> Int
-part2 x = maximum [ (magnitude $ reduce (Node a b)) | a <- x, b <- x, a /= b]
+part2 x = maximum [magnitude $ reduce (Node a b) | a <- x, b <- x, a /= b]
 
 solve :: String -> (String, String)
 solve input = (s1, s2)
