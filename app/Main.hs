@@ -39,6 +39,18 @@ days = [Day01.solve,
         Day17.solve,
         Day18.solve]
 
+-- From: https://www.reddit.com/r/haskell/comments/1vras3/haskell_io_how_to_read_numbers/cewxbzo/
+readMaybe :: Read a => String -> Maybe a
+readMaybe s = case reads s of
+                [(val, "")] -> Just val
+                _ -> Nothing
+
+getDay :: String -> Int
+getDay [] = error "Invalid input argument, use `all`, `last` or a specific number"
+getDay n = case (readMaybe n :: Maybe Int) of
+             Just x -> x
+             _ -> error "Invalid input argument, use `all`, `last` or a specific number"
+
 solveDay :: Int -> IO()
 solveDay n = do
   input <- readFile $ concat ["./data/day_", show n, ".txt"]
@@ -60,4 +72,5 @@ main = do
   case args of
     ["all"] -> runAll
     ["last"] -> runLast
+    [xs] -> solveDay $ getDay xs
     _ -> error "Unknown command line option, use `all`, `last` or a specific number"
